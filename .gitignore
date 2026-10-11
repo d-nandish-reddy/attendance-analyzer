@@ -1,0 +1,19 @@
+
+# Private attendance data
+attendance.db
+attendancebackup.db
+mits_attendance.txt
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Local configuration
+.vscode/

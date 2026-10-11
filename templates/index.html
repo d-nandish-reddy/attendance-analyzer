@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attendance Analyzer</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h1>📊  Attendance Analyzer</h1>
+        <p>Your personal attendance dashboard</p>
+    </header>
+
+    <main>
+
+        <section class="refresh-section">
+            <h2>Update from MITS</h2>
+            <p>Fetch your latest attendance from the college portal.</p>
+
+            <form action="/refresh-attendance" method="POST">
+            <button type="submit">🔄 Refresh Attendance</button>
+            </form>
+        </section>
+
+            <div class="percentage">{{ overall }}%</div>
+
+            <p>
+                {{ total_attended }} attended out of
+                {{ total_classes }} classes
+            </p>
+        </section>
+
+        <section class="form-section">
+            <h2>Add Subject</h2>
+
+            <form action="/add" method="POST">
+                <input type="text" name="name"
+                       placeholder="Subject name" required>
+
+                <input type="number" name="attended"
+                       placeholder="Classes attended"
+                       min="0" required>
+
+                <input type="number" name="total"
+                       placeholder="Total classes"
+                       min="1" required>
+
+                <button type="submit">Add Subject</button>
+            </form>
+        </section>
+
+        <section>
+            <h2>Subject Attendance</h2>
+
+            {% for subject in subjects %}
+
+                {% set percent =
+                    subject['attended'] / subject['total'] * 100 %}
+
+                <div class="subject-card">
+                    <h3>{{ subject['name'] }}</h3>
+
+                    <p>
+                        {{ subject['attended'] }} /
+                        {{ subject['total'] }} classes
+                    </p>
+
+                    <div class="progress">
+                        <div class="progress-fill"
+                             style="width: {{ percent }}%">
+                        </div>
+                    </div>
+
+                    <p>{{ "%.2f"|format(percent) }}%</p>
+
+                    {% if percent < 50 %}
+                        <p class="warning">⚠️ Below 75%</p>
+                    {% else %}
+                        <p class="success">✅ Attendance safe</p>
+                    {% endif %}
+
+                    <form action="/delete/{{ subject['id'] }}"
+                          method="POST">
+                        <button class="delete-btn"
+                                type="submit">Delete</button>
+                    </form>
+                </div>
+
+            {% else %}
+                <p>No subjects added yet. Add your first subject!</p>
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+    <footer>
+        <p>Attendance Analyzer | Built with Python</p>
+    </footer>
+
+</body>
+</html>
